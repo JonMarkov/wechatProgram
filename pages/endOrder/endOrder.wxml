@@ -1,0 +1,54 @@
+<view class="video_border" style="background:#fff url('https://static.kankan.com/distFlie/file/subOrdor.png') no-repeat center top;background-size: 100%;margin-top:40rpx;border-radius:10rpx;display:flex;text-align:center;width:90%">
+  <view class='subText'>
+    已购买看看券
+    <text>*{{voucherCount}}</text>
+    <view class='btn_kd'>
+      <button class='share' bindtap='SeeShop'>查看我的小店</button>
+      <button class='share user-motto' id="shareBtn" open-type="share" hover-class="other-button-hover">
+        {{motto}}
+      </button>
+
+    </view>
+
+  </view>
+</view>
+<!-- <view class='dowTags'>
+  <view class='dowBtn'>
+    <text>下载天天看看APP </text>
+  </view>
+</view> -->
+
+<view class='couponInfo'>
+  <view class='infoTop'>
+    <text class='infoTop_title'>订单编号</text>
+    <text class='infoTop_con'>{{payOrderNo}}</text>
+  </view>
+  <view class='infoCenter'>
+    <view wx:for="{{OrderList}}" wx:key="" data-id="{{item.orderDetailId}}">
+      <view class='infoCenterOne'>
+        <text>看看券名称</text>
+        <text>《{{item.productName}}》</text>
+      </view>
+      <view class='infoCenterTwo'>
+        <text>看看券数量</text>
+        <text>{{item.count}}张</text>
+      </view>
+    </view>
+    <view class='infoCenterFive'>
+      <text>金额</text>
+      <text>￥{{amount}}</text>
+    </view>
+  </view>
+  <view class='infoBottom'>
+    <image src='{{HeheadPicUrl}}'></image>
+    <text>{{HeNickname}}(ID:{{HeId}})的看看小店出售</text>
+  </view>
+</view>
+
+<view class='introduce'>
+  <text>*看看券使用方法：在“看看视频APP”中，用微信号登录，即可使用观影券观影；</text>
+</view>
+<view class='subBack' bindtap='ToBack'>
+  <image src='../../images/toBack.png'></image>
+  <text>返回继续购票</text>
+</view>

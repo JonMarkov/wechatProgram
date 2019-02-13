@@ -1,0 +1,43 @@
+/* pages/video/video.wxss */
+.video_container{
+   height: 100%;
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   padding: 20px 0;
+}
+
+.btn{
+  width: 90%;
+  margin-top:20rpx;
+}
+
+.danmuGrop{
+  margin-top:0rpx;
+  display: flex;
+}
+
+.danmuinput{
+  border: solid 1px #ccc;
+  margin-left: 20rpx;
+  height: 85rpx;
+  line-height: 80rpx;
+  font-size: 35rpx;
+  padding-left: 20rpx;
+  border-radius: 10rpx;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  width: 70%;
+}
+
+.sendDanmu{
+  width: 20%;
+  margin:0px;
+  background-color: #0f0;
+  color: white;
+  border-top-left-radius:0px;
+  border-bottom-left-radius: 0px; 
+  height: 88rpx;
+}

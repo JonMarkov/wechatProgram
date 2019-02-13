@@ -1,0 +1,169 @@
+/* pages/endOrder/endOrder.wxss */
+
+page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(#040209, #572606);
+}
+.share{
+  font-size: 30rpx;
+  margin-top: 400rpx;
+  background: linear-gradient(#FFF6DA, #FFD37A);
+  width: 300rpx;
+  border-radius:50rpx 
+}
+.video_border {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  height: 780rpx;
+  background-size: 100%;
+  align-self: center;
+}
+
+.subText {
+  margin-top: 180rpx;
+  font-size: 30rpx;
+  color: #824204;
+  width: 100%
+}
+
+.dowTags {
+  background: #fff;
+  width: 90%;
+  height: 180rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0 0 10rpx 10rpx;
+}
+
+.dowBtn {
+  padding: 20rpx 50rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: #0080ff;
+  border-radius: 50rpx;
+  font-size: 36rpx;
+  color: #fff;
+}
+
+.dowBtn image {
+  width: 34rpx;
+  height: 34rpx;
+}
+
+.couponInfo {
+  background: #fff;
+  width: 90%;
+  margin-top: 40rpx;
+  border-radius: 10rpx;
+}
+
+.infoTop {
+  display: flex;
+  justify-content: space-between;
+  padding: 30rpx;
+}
+
+.infoTop_title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #0d0d0d
+}
+
+.infoTop_con {
+  font-size: 24rpx;
+  color: #666
+}
+
+.infoCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  font-size: 24rpx;
+  line-height: 45rpx;
+  background: #f7f7f7;
+}
+
+.infoCenterOne {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoCenterTwo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoCenterThree {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoCenterFour {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoCenterFive {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoBottom {
+  display: flex;
+  flex-direction: row;
+  padding: 30rpx;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.infoBottom image {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 30rpx;
+}
+
+.infoBottom text {
+  color: #666;
+  font-size: 26rpx;
+  margin-left: 20rpx;
+}
+
+.introduce {
+  color: rgba(254, 254, 254, 1);
+  font-size: 22rpx;
+  justify-content: flex-start;
+  padding: 30rpx 40rpx;
+}
+
+.subBack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50rpx;
+  font-size: 30rpx
+}
+
+.subBack image {
+  width: 30rpx;
+  height: 48rpx;
+}
+
+.subBack text {
+  color: #fff;
+  font-size: 36rpx;
+  margin-left: 20rpx;
+}
+.btn_kd{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%
+}

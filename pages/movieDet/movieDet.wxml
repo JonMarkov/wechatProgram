@@ -1,0 +1,139 @@
+<!-- 头部视频 -->
+<view class='det_video'>
+  <video></video>
+</view>
+<!-- 标题和价钱 -->
+<view class='det_one'>
+  <view class='det_title'>
+    视频券《战狼2》
+  </view>
+  <view class='det_price'>
+    <view class='new_old_img'>
+      <view class='det_new'>
+        <text>￥</text>
+        <text>3.99</text>
+      </view>
+      <view class='det_old'>
+        <text>￥</text>
+        <text>5.0</text>
+      </view>
+      <view class='det_img'>
+        <image src='../../images/youhui.png'></image>
+      </view>
+    </view>
+    <view class='price_btn'>
+      123
+    </view>
+  </view>
+</view>
+<!-- 店铺和播放 -->
+<view class='det_two'>
+  <view class='det_aging'>
+    <view class='aging_sales'>
+      <view class='aging_view'>
+        <text>本店销量</text>
+        <text class='sales_num'>15</text>
+      </view>
+      <view class='aging_play'>
+        <text>播放</text>
+        <text class='sales_num'>1556</text>
+      </view>
+    </view>
+    <view class='aging_det'>视频券有效期1年，使用后72小时内可不限次观看</view>
+  </view>
+  <view class='btn_app'>
+    <text class='app_btn'>查看视频App</text>
+    <text class='app_det'>完整视频等你来</text>
+  </view>
+</view>
+<!-- 专辑列表 -->
+<view class='det_three'>
+  <view class='det_album'>
+    <text class='album_list'>专辑列表</text>
+    <text class='album_num'>2集</text>
+  </view>
+  <view class='list_list'>
+    <view class='list_det'>
+      <image src='../../images/juzhao_1.png'></image>
+      <text>战狼2-试看</text>
+    </view>
+  </view>
+</view>
+<!-- 详细 -->
+<view class='det_four'>
+  <view class='detInfo_title'>
+    <text>视频介绍</text>
+    <text>sanjian</text>
+  </view>
+  <view class='detInfo_one'>
+    <view class='one_one'>
+      <view class='one_title'>评分</view>
+      <view>9.4</view>
+    </view>
+    <view class='one_one'>
+      <view class='one_title'>类型</view>
+      <text>喜剧 爱情 剧情</text>
+    </view>
+  </view>
+  <view class='detInfo_one'>
+    <view class='one_one'>
+      <view class='one_title'>导演</view>
+      <view>吴京</view>
+    </view>
+    <view class='one_one'>
+      <view class='one_title'>年份</view>
+      <text>2016</text>
+    </view>
+  </view>
+  <view class='detInfo_three'>
+    <view>主演
+      <text>吴京 弗兰克格罗 吴刚 张翰</text>
+    </view>
+  </view>
+  <view class='detInfo_four'>
+    <view>简介：</view>
+    <view>被开除军籍的冷锋（吴京饰演）本是因找杀害龙小云的凶手（余男饰演）来到非洲，但是却突然被卷入一场非洲国家的叛乱。因为国家之间政治立场的关系，中国军队无法在非洲实行武装行动撤离华侨。而作为退伍老兵的冷锋无法忘记曾经为军人的使命，本来可以安全撤离的他毅然决然地回到了沦陷区，孤身一人带领身陷屠杀中的同胞和难民，展开生死逃亡。随着斗争的持续，体内的狼性逐渐复苏，最终闯入战乱区域，为同胞而战斗</view>
+  </view>
+</view>
+<!-- 悬浮购物车 -->
+<view class='seize_seat'></view>
+<!-- 未选择之前 -->
+<view class='info_cart' wx:if='{{0>1}}'>
+  <view class='cart_bg'>
+    <view class='cart_icon'>
+      <image src='../../images/video_hui.png'></image>
+      <view class='cart_con'>
+        <text>购票一张</text>
+        <text>即可成功开店</text>
+      </view>
+    </view>
+    <view class='cart_btn'>
+      <text>立即购票</text>
+    </view>
+  </view>
+</view>
+<!-- 选择之后 -->
+<view class='info_cart' wx:if='{{0<1}}'>
+  <view class='cart_bg_cai'>
+    <view class='cart_icon'>
+      <image src='../../images/video_cai.png'></image>
+      <i class='icon_jb'>1</i>
+      <view class='cart_con'>
+        <view class='con_pr'>
+          <view class='pr_new'>
+            <text>￥</text>
+            <text>3.99</text>
+          </view>
+          <view class='pr_old'>
+            <text>￥</text>
+            <text>5.0</text>
+          </view>
+        </view>
+        <text>即将成功开店</text>
+      </view>
+    </view>
+    <view class='cart_btn_cai'>
+      <text>立即购票</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/endOrder/endOrder",
+    "pages/home/home",
+    "pages/movieDet/movieDet",
+    "pages/lianxi/lianxi"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarTitleText": "看看视频小店",
+    "navigationBarTextStyle": "black"
+  }
+}

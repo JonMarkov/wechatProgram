@@ -1,0 +1,200 @@
+<!-- 店铺信息 -->
+<view class='shop_info'>
+  <!-- 左侧 -->
+  <view class='info_left'>
+    <view class='info_head'>
+      <image src='{{HeheadPicUrl}}'></image>
+    </view>
+    <view class='info_name_grade'>
+      <view class='name_grade'>
+        <view class='info_name'>{{HeNickname}}</view>
+        <view class='info_grade'>
+        <image src='../../images/lv0.png' wx:if="{{HehedLevel == 0}}"></image>
+        <image src='../../images/lv1.png' wx:if="{{HehedLevel == 1}}"></image>
+        <image src='../../images/lv2.png' wx:if="{{HehedLevel == 2}}"></image>
+        <image src='../../images/lv3.png' wx:if="{{HehedLevel == 3}}"></image>
+        <image src='../../images/lv4.png' wx:if="{{HehedLevel == 4}}"></image>
+        <image src='../../images/lv5.png' wx:if="{{HehedLevel == 5}}"></image>
+        </view>
+      </view>
+      <view class='info_num'>看看ID：{{HeId}}</view>
+    </view>
+  </view>
+  <!-- 右侧 -->
+  <view class='info_right' bindtap='macong' wx:if="{{userId_id !=1}}">
+    <view class='info_title'>小店累计收入</view>
+    <view class='info_money'>￥{{HeMoney}}</view>
+  </view>
+</view>
+<!-- 视频轮播 -->
+<!-- <image  class='dianpu' src='../../images/up_click.png'></image> -->
+<view class="{{dp?'dp1':'dp2'}} dp2 dianpu" bindtap="showDialogBtn" >我也要开店</view>
+<view class="video_border" style="background:#fff url('https://static.kankan.com/distFlie/file/video_border.png') no-repeat center top;background-size: 100%;">
+
+  <!-- <image class='up_cl' src='../../images/up_click.png'></image> -->
+  <video id="myVideo" poster="https://static.kankan.com/distFlie/file/movie.png" src="{{videoState}}"></video>
+  <!-- <image class='down_cl' src='../../images/down_click.png'></image> -->
+</view>
+<!-- 推荐的视频 -->
+<view class='info_det'>
+  <view class='det_title'>他推荐的看看视频</view>
+  <view class='det_num'>
+    共
+    <text>{{movieList.length}}</text> 部
+  </view>
+</view>
+<view class='movieInfo'>
+  <view class='det_con' wx:for="{{movieList}}">
+    <view class='det_left'>
+      <image src='{{item.screensHotUrl}}'></image>
+    </view>
+    <view class='det_right'>
+      <view class='right_title'>
+        <view class='title_name'>{{item.movieName}}</view>
+        <!-- <text class='title_year'>{{item.ctime}}</text> -->
+      </view>
+      <view class='right_con'>
+        <text class='con_det'>{{item.title}}</text>
+      </view>
+      <view class='right_num'>
+        <view class='num_play'>
+          <text class='paly_title'>全网销量 </text>
+          <text class='play_num'> {{item.salesCount }}</text>
+        </view>
+      </view>
+      <view class='right_price'>
+        <view class='price_new'>
+          <text>￥</text>
+          <text>{{item.agencyPrice}}</text>
+        </view> 
+        <view class='price_old'>
+          <text>￥</text>
+          <text>{{item.price}}</text>
+        </view>
+      </view>
+      <view class='right_arch'>
+        <view class='yh_img'>
+          <view class='awards'>
+            <image class='awards_img' src='../../images/ztfj.png'></image>
+            <view class='awards_money'>￥{{item.salePrice}}</view>
+          </view>
+          <view class='awards'>
+            <image class='awards_img' src='../../images/xjfj.png'></image>
+            <view class='awards_money'>￥{{item.childSalePrice}}</view>
+          </view>
+        </view>
+        <view class='arch_click'>
+          <image bindtap='BindToAddCart' data-movieId="{{item.movieId}}" data-index="{{index}}" src='../../images/Rectangle.png' wx:if="{{item.movieStatus}}"></image>
+          <text>{{item.movieNum||''}}</text>
+          <image bindtap='BindToSubCart' data-movieId="{{item.movieId}}" data-index="{{index}}" src='../../images/jiahao.png'></image>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<!-- 弹幕 -->
+<view class='barr_ma' wx:if="{{userAdvNews}}">
+  <view class='barrage' data-index="{{index}}" animation="{{animationCloudData}}" style="position: relative; left: -200px;">
+    <image src='../../images/head_por.jpg'></image>
+    <text>{{macMa}}</text>
+  </view>
+</view>
+
+<!-- 悬浮购物车 -->
+<!-- 点击弹出 -->
+<view class='movie_info_cart' wx:if="{{shopPopup}}" catchtouchmove="preventTouchMove">
+  <!-- 标题部分 -->
+  <view class='movie_info_cart_top'>
+    <view class='movie_top_title'>我的购物车</view>
+    <view class='movie_top_right'>
+      <view class='movie_top_right_empty' bindtap='emptyFn'>
+        <image src='../../images/scicon.png'></image>
+        <text>全部清空</text>
+      </view>
+      <view class='movie_top_right_err' bindtap='BindToPopup'>
+        <image src='../../images/gbicon.png'></image>
+      </view>
+    </view>
+  </view>
+  <view class='movie_info_cart_center' wx:for="{{shopCartDataList}}" wx:if="{{item.movieStatus}}">
+    <view class='movie_center_title'>{{item.movieName}}</view>
+    <view class='movie_center_price'>￥{{item.moviePrice*item.movieNum}}</view>
+    <view class='movie_center_addAdnSub'>
+      <view class='addAdnSub_sub' bindtap='BindToSubNum' data-index="{{index}}">
+        <image src='../../images/Rectangle.png'></image>
+      </view>
+      <view class='addAdnSub_num'>{{item.movieNum}}</view>
+      <view class='addAdnSub_add' bindtap='BindToAddNum' data-index="{{index}}">
+        <image src='../../images/jiahao.png'></image>
+      </view>
+    </view>
+  </view>
+  <view class='movie_info_cart_bottom'>
+    <view class='movie_content'>
+      <text>支付成功后，观影券将存入看看视频APP“我的观影券”中，下载看看视频APP并使用同一微信账号登录即可查看并使用</text>
+    </view>
+  </view>
+</view>
+<!-- 未选择之前 -->
+<view class='info_cart' wx:if="{{shopNuStatus}}">
+  <view class='cart_bg'>
+    <view class='cart_icon'>
+      <image src='../../images/video_hui.png'></image>
+      <view class='cart_con'>
+        <text>购票一张</text>
+        <text>即可成功开店</text>
+      </view>
+    </view>
+    <view class='cart_btn'>
+      <text>点击"+"</text>
+      <text>选择商品</text>
+    </view>
+  </view>
+</view>
+<!-- 选择之后 -->
+<view class='info_cart' wx:else>
+  <view class='cart_bg_cai'>
+    <view class='cart_icon' bindtap='BindToPopup'>
+      <image src='../../images/video_cai.png'></image>
+      <i class='icon_jb'>{{shopCartIndexI}}</i>
+      <view class='cart_con'>
+        <view class='con_pr'>
+          <view class='pr_new'>
+            <text>￥</text>
+            <text>{{shopCartIndexMoney}}</text>
+          </view>
+          <!-- <view class='pr_old'>
+            <text>￥</text>
+            <text>5.0</text>
+          </view> -->
+        </view>
+        <text>即将成功开店</text>
+      </view>
+    </view>
+    <view class='cart_btn_cai' bindtap='BindToBuy'>
+      <text>立即购票</text>
+    </view>
+  </view>
+</view>
+
+<!--我也要开店弹窗-->
+<view class="modal-mask" bindtap="hideModalshopPopup" catchtouchmove="preventTouchMove" wx:if="{{shopPopup}}"></view>
+<view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+<view class="modal-dialog" wx:if="{{showModal}}" catchtouchmove="preventTouchMove">
+  <view class="modal-title">开店说明</view>
+  <view class='content_view'>
+    <!-- <text class='content_title'>如何获得看看小店？</text> -->
+    <text class='content_info'>1、首次购买任意视频即可获赠看看小店，同时获得所购视频经销权（就可以对外推广赚钱啦）。</text>
+    <!-- <text class='content_title'>看看小店的好处？</text> -->
+    <text class='content_info'> 2、直推返奖：您的看看小店售出视频后，您将直接获得30%以上提成。</text>
+    <!-- <text class='content_title'>如何提升自己的等级？ </text> -->
+    <!-- <text class='content_title'> 如何获取更多视频售卖权？</text> -->
+    <text class='content_info'>3、下级返奖：用户从您的店里买券后，将成为您相关视频的版权代理。版权代理卖出视频后，您将获得提成奖励。</text>
+    <text class='content_info'>4、首次购买某视频的看看券后，即可获得该视频的经销权。</text>
+    <text class='content_info'>5、更多信息应用商店搜索【看看视频】，下载APP后查看。</text>
+  </view>
+  <view class="modal-footer">
+    <!-- <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view> -->
+    <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">确定</view>
+  </view>
+</view>
