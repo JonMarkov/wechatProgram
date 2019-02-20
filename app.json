@@ -1,9 +1,9 @@
 {
   "pages": [
-    "pages/login/login",
-    "pages/endOrder/endOrder",
     "pages/home/home",
+    "pages/login/login",
     "pages/movieDet/movieDet",
+    "pages/endOrder/endOrder",
     "pages/lianxi/lianxi"
   ],
   "window": {

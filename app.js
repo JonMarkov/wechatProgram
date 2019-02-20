@@ -6,26 +6,29 @@ App({
   /**     * 设置全局变量     */
   globalData: {
     openid: 0,
-    // wx_url_1: 'https://api-plus-test.kkstudy.cn/login/weixin',
-    // 登陆授权接口GET /user/login/miniProEncrypt
-    wx_url_1: 'https://plus-api.kankan.com/user/login/miniProEncrypt',
+    // 公共前缀
+    WX_user:'https://plus-api.kankan.com',
+    // 登陆授权接口
+    wx_url_1: '/user/login/miniProEncrypt',
     // 电影列表接口
-    wx_url_2: 'https://plus-api.kankan.com/user/shop/getMySpreadListByUserId',
+    wx_url_2: '/user/shop/getMySpreadListByUserId',
     // 支付接口
-    wx_url_3: 'https://plus-api.kankan.com/order/unifiedOrder',
+    wx_url_3: '/order/unifiedOrder',
     // 支付状态接口
-    wx_url_4: 'https://plus-api.kankan.com/order/queryOrderDetails',
+    wx_url_4: '/order/queryOrderDetails',
     // 获取用户信息接口
-    wx_url_5: 'https://plus-api.kankan.com/base/user/getUserNameById',
+    wx_url_5: '/base/user/getUserNameById',
     // 获取小店累计收入函数
-    // wx_url_6: 'https://api-plus-test.kkstudy.cn/base/user/getUserAccumulatedIncome',
-    wx_url_6:'https://rebate-api.kankan.com/rebate/user/getUserAccumulatedIncomeNoLogin',
+    wx_url_6:'/rebate/user/getUserAccumulatedIncomeNoLogin',
     // 获取视频地址
-    wx_url_7: 'https://plus-api.kankan.com/base/movie/getMovieTicketForMini',
+    wx_url_7: '/base/movie/getMovieTicketForMini',
     //小程序分享
-    wx_url_8: 'https://plus-api.kankan.com/weixin/share/miniPro',
+    wx_url_8: '/weixin/share/miniPro',
     //小程序分享
-    wx_url_9: 'https://plus-api.kankan.com/user/shop/getOfficialRecommendation',
-
+    wx_url_9: '/user/shop/getOfficialRecommendation',
+    // 获取指定人的推广
+    wx_url_10:'/user/shop/getMySpreadListByUserId',
+    // 获取指定人的待推广
+    wx_url_11:'/user/shop/getMySpreadList'
   }
 })

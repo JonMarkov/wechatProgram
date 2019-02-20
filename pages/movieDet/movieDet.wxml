@@ -1,28 +1,42 @@
 <!-- 头部视频 -->
 <view class='det_video'>
-  <video></video>
+  <video id="myVideo" poster="https://static.kankan.com/distFlie/file/movie.png" src="{{videoState}}"></video>
 </view>
 <!-- 标题和价钱 -->
 <view class='det_one'>
+  <!-- 标题 -->
   <view class='det_title'>
-    视频券《战狼2》
+    <text>视频券《战狼2》</text>
   </view>
+  <!-- 价钱和活动 -->
   <view class='det_price'>
     <view class='new_old_img'>
+      <!-- 现价 -->
       <view class='det_new'>
         <text>￥</text>
         <text>3.99</text>
       </view>
+      <!-- 原价 -->
       <view class='det_old'>
         <text>￥</text>
         <text>5.0</text>
       </view>
+      <!-- 活动标签 -->
       <view class='det_img'>
-        <image src='../../images/youhui.png'></image>
+        <view class='ActLabel'>
+          <image src='../../images/ztfj.png'></image>
+          <view>￥1.5</view>
+        </view>
+        <view class='ActLabel'>
+          <image src='../../images/xjfj.png'></image>
+          <view>￥1.5</view>
+        </view>
       </view>
     </view>
     <view class='price_btn'>
-      123
+      <image src='../../images/Rectangle.png'></image>
+      <text>1</text>
+      <image src='../../images/jiahao.png'></image>
     </view>
   </view>
 </view>
@@ -30,12 +44,12 @@
 <view class='det_two'>
   <view class='det_aging'>
     <view class='aging_sales'>
-      <view class='aging_view'>
+      <!-- <view class='aging_view'>
         <text>本店销量</text>
         <text class='sales_num'>15</text>
-      </view>
+      </view> -->
       <view class='aging_play'>
-        <text>播放</text>
+        <text>看看票房</text>
         <text class='sales_num'>1556</text>
       </view>
     </view>
@@ -57,13 +71,17 @@
       <image src='../../images/juzhao_1.png'></image>
       <text>战狼2-试看</text>
     </view>
+     <view class='list_det'>
+      <image src='../../images/juzhao_1.png'></image>
+      <text>战狼2-试看</text>
+    </view>
   </view>
 </view>
 <!-- 详细 -->
 <view class='det_four'>
   <view class='detInfo_title'>
     <text>视频介绍</text>
-    <text>sanjian</text>
+    <image src='../../images/sq.png'></image>
   </view>
   <view class='detInfo_one'>
     <view class='one_one'>
@@ -92,47 +110,81 @@
   </view>
   <view class='detInfo_four'>
     <view>简介：</view>
-    <view>被开除军籍的冷锋（吴京饰演）本是因找杀害龙小云的凶手（余男饰演）来到非洲，但是却突然被卷入一场非洲国家的叛乱。因为国家之间政治立场的关系，中国军队无法在非洲实行武装行动撤离华侨。而作为退伍老兵的冷锋无法忘记曾经为军人的使命，本来可以安全撤离的他毅然决然地回到了沦陷区，孤身一人带领身陷屠杀中的同胞和难民，展开生死逃亡。随着斗争的持续，体内的狼性逐渐复苏，最终闯入战乱区域，为同胞而战斗</view>
+    <view class='det_det_text'>被开除军籍的冷锋（吴京饰演）本是因找杀害龙小云的凶手（余男饰演）来到非洲，但是却突然被卷入一场非洲国家的叛乱。因为国家之间政治立场的关系，中国军队无法在非洲实行武装行动撤离华侨。而作为退伍老兵的冷锋无法忘记曾经为军人的使命，本来可以安全撤离的他毅然决然地回到了沦陷区，孤身一人带领身陷屠杀中的同胞和难民，展开生死逃亡。随着斗争的持续，体内的狼性逐渐复苏，最终闯入战乱区域，为同胞而战斗</view>
   </view>
 </view>
 <!-- 悬浮购物车 -->
-<view class='seize_seat'></view>
+<!-- 点击弹出 -->
+<view class='movie_info_cart' wx:if="{{shopPopup}}" catchtouchmove="preventTouchMove">
+  <!-- 标题部分 -->
+  <view class='movie_info_cart_top'>
+    <view class='movie_top_title'>我的购物车</view>
+    <view class='movie_top_right'>
+      <view class='movie_top_right_empty' bindtap='emptyFn'>
+        <image src='../../images/scicon.png'></image>
+        <text>全部清空</text>
+      </view>
+      <view class='movie_top_right_err' bindtap='BindToPopup'>
+        <image src='../../images/gbicon.png'></image>
+      </view>
+    </view>
+  </view>
+  <view class='movie_info_cart_center' wx:for="{{shopCartDataList}}" wx:if="{{item.movieStatus}}">
+    <view class='movie_center_title'>{{item.movieName}}</view>
+    <view class='movie_center_price'>￥{{item.moviePrice*item.movieNum}}</view>
+    <view class='movie_center_addAdnSub'>
+      <view class='addAdnSub_sub' bindtap='BindToSubNum' data-index="{{index}}">
+        <image src='../../images/Rectangle.png'></image>
+      </view>
+      <view class='addAdnSub_num'>{{item.movieNum}}</view>
+      <view class='addAdnSub_add' bindtap='BindToAddNum' data-index="{{index}}">
+        <image src='../../images/jiahao.png'></image>
+      </view>
+    </view>
+  </view>
+  <view class='movie_info_cart_bottom'>
+    <view class='movie_content'>
+      <text>支付成功后，观影券将存入看看视频APP“我的观影券”中，下载看看视频APP并使用同一微信账号登录即可查看并使用</text>
+    </view>
+  </view>
+</view>
 <!-- 未选择之前 -->
-<view class='info_cart' wx:if='{{0>1}}'>
+<view class='info_cart' wx:if="{{shopNuStatus}}">
   <view class='cart_bg'>
     <view class='cart_icon'>
       <image src='../../images/video_hui.png'></image>
       <view class='cart_con'>
-        <text>购票一张</text>
+        <text>购券一张</text>
         <text>即可成功开店</text>
       </view>
     </view>
     <view class='cart_btn'>
-      <text>立即购票</text>
+      <text>点击"+"</text>
+      <text>选择商品</text>
     </view>
   </view>
 </view>
 <!-- 选择之后 -->
-<view class='info_cart' wx:if='{{0<1}}'>
+<view class='info_cart' wx:else>
   <view class='cart_bg_cai'>
-    <view class='cart_icon'>
+    <view class='cart_icon' bindtap='BindToPopup'>
       <image src='../../images/video_cai.png'></image>
-      <i class='icon_jb'>1</i>
+      <i class='icon_jb'>{{shopCartIndexI}}</i>
       <view class='cart_con'>
         <view class='con_pr'>
           <view class='pr_new'>
             <text>￥</text>
-            <text>3.99</text>
+            <text>{{shopCartIndexMoney}}</text>
           </view>
-          <view class='pr_old'>
+          <!-- <view class='pr_old'>
             <text>￥</text>
             <text>5.0</text>
-          </view>
+          </view> -->
         </view>
         <text>即将成功开店</text>
       </view>
     </view>
-    <view class='cart_btn_cai'>
+    <view class='cart_btn_cai' bindtap='BindToBuy'>
       <text>立即购票</text>
     </view>
   </view>

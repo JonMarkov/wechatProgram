@@ -135,7 +135,15 @@ page {
   font-size: 30rpx;
   line-height: 20pt;
   color: #0d0d0d;
+
+  display: flex;
+  flex-direction: row
+}
+.title_sel{
   font-weight: bold;
+}
+.title_he{
+  margin-left: 20rpx
 }
 
 .det_num {

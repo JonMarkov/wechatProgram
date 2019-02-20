@@ -54,7 +54,7 @@ Page({
               params.code = res.code
               const newparams = Object.assign(params);
               wx.request({
-                url: getApp().globalData.wx_url_1,
+                url: getApp().globalData.WX_user + getApp().globalData.wx_url_1,
                 data: newparams,
                 method: "GET",
                 // dataType: JSON,

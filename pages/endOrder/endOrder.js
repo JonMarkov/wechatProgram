@@ -1,7 +1,7 @@
 // pages/endOrder/endOrder.js
-var ListUrl_4 = getApp().globalData.wx_url_4
-var ListUrl_5 = getApp().globalData.wx_url_5
-var ListUrl_8 = getApp().globalData.wx_url_8
+var ListUrl_4 = getApp().globalData.WX_user + getApp().globalData.wx_url_4
+var ListUrl_5 = getApp().globalData.WX_user + getApp().globalData.wx_url_5
+var ListUrl_8 = getApp().globalData.WX_user + getApp().globalData.wx_url_8
 Page({
 
   /**
@@ -19,6 +19,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    wx.removeStorageSync('shopCartDataList')
     var that = this;
     wx.getStorage({
       key: "userInfo",

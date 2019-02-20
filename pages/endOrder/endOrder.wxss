@@ -12,7 +12,8 @@ page {
   margin-top: 400rpx;
   background: linear-gradient(#FFF6DA, #FFD37A);
   width: 300rpx;
-  border-radius:50rpx 
+  border-radius:50rpx;
+  color: #824204
 }
 .video_border {
   display: flex;

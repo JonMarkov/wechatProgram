@@ -9,12 +9,12 @@
       <view class='name_grade'>
         <view class='info_name'>{{HeNickname}}</view>
         <view class='info_grade'>
-        <image src='../../images/lv0.png' wx:if="{{HehedLevel == 0}}"></image>
-        <image src='../../images/lv1.png' wx:if="{{HehedLevel == 1}}"></image>
-        <image src='../../images/lv2.png' wx:if="{{HehedLevel == 2}}"></image>
-        <image src='../../images/lv3.png' wx:if="{{HehedLevel == 3}}"></image>
-        <image src='../../images/lv4.png' wx:if="{{HehedLevel == 4}}"></image>
-        <image src='../../images/lv5.png' wx:if="{{HehedLevel == 5}}"></image>
+          <image src='../../images/lv0.png' wx:if="{{HehedLevel == 0}}"></image>
+          <image src='../../images/lv1.png' wx:if="{{HehedLevel == 1}}"></image>
+          <image src='../../images/lv2.png' wx:if="{{HehedLevel == 2}}"></image>
+          <image src='../../images/lv3.png' wx:if="{{HehedLevel == 3}}"></image>
+          <image src='../../images/lv4.png' wx:if="{{HehedLevel == 4}}"></image>
+          <image src='../../images/lv5.png' wx:if="{{HehedLevel == 5}}"></image>
         </view>
       </view>
       <view class='info_num'>看看ID：{{HeId}}</view>
@@ -28,7 +28,7 @@
 </view>
 <!-- 视频轮播 -->
 <!-- <image  class='dianpu' src='../../images/up_click.png'></image> -->
-<view class="{{dp?'dp1':'dp2'}} dp2 dianpu" bindtap="showDialogBtn" >我也要开店</view>
+<view class="{{dp?'dp1':'dp2'}} dp2 dianpu" bindtap="showDialogBtn">我也要开店</view>
 <view class="video_border" style="background:#fff url('https://static.kankan.com/distFlie/file/video_border.png') no-repeat center top;background-size: 100%;">
 
   <!-- <image class='up_cl' src='../../images/up_click.png'></image> -->
@@ -37,15 +37,19 @@
 </view>
 <!-- 推荐的视频 -->
 <view class='info_det'>
-  <view class='det_title'>他推荐的看看视频</view>
+  <view class='det_title'>
+    <view wx:if="{{RefUserId==1}}" class='det_title title_sel'>他推荐的看看视频</view>
+    <view wx:if="{{RefUserId!=1}}" bindtap='ToTitleMy' class="{{title_set?'title_sel':''}}">他的购买</view>
+    <view wx:if="{{RefUserId!=1}}" bindtap='ToTitleHe' class="title_he {{title_set?'':'title_sel'}}">他未购买</view>
+  </view>
   <view class='det_num'>
     共
-    <text>{{movieList.length}}</text> 部
+    <text>{{movieList.length?movieList.length:'0'}}</text> 部
   </view>
 </view>
 <view class='movieInfo'>
-  <view class='det_con' wx:for="{{movieList}}">
-    <view class='det_left'>
+  <view class='det_con' wx:for="{{movieList}}" wx:if="{{movieList}}">
+    <view class='det_left' bindtap='ToDet'>
       <image src='{{item.screensHotUrl}}'></image>
     </view>
     <view class='det_right'>
@@ -66,7 +70,7 @@
         <view class='price_new'>
           <text>￥</text>
           <text>{{item.agencyPrice}}</text>
-        </view> 
+        </view>
         <view class='price_old'>
           <text>￥</text>
           <text>{{item.price}}</text>
@@ -91,6 +95,7 @@
       </view>
     </view>
   </view>
+  <view wx:if="{{movieList == null}}">视频列表为空</view>
 </view>
 <!-- 弹幕 -->
 <view class='barr_ma' wx:if="{{userAdvNews}}">
@@ -141,7 +146,7 @@
     <view class='cart_icon'>
       <image src='../../images/video_hui.png'></image>
       <view class='cart_con'>
-        <text>购票一张</text>
+        <text>购券一张</text>
         <text>即可成功开店</text>
       </view>
     </view>

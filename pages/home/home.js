@@ -1,28 +1,23 @@
 // pages/home/home.js
 // 声明SM 调用接口声明
-var ListUrl = getApp().globalData.wx_url_2
-var ListUrl_3 = getApp().globalData.wx_url_3
-var ListUrl_5 = getApp().globalData.wx_url_5
-var ListUrl_6 = getApp().globalData.wx_url_6
-var ListUrl_7 = getApp().globalData.wx_url_7
-var ListUrl_8 = getApp().globalData.wx_url_8
-var ListUrl_9 = getApp().globalData.wx_url_9
+var ListUrl    = getApp().globalData.WX_user + getApp().globalData.wx_url_2
+var ListUrl_3  = getApp().globalData.WX_user + getApp().globalData.wx_url_3
+var ListUrl_5  = getApp().globalData.WX_user + getApp().globalData.wx_url_5
+var ListUrl_6  = getApp().globalData.WX_user + getApp().globalData.wx_url_6
+var ListUrl_7  = getApp().globalData.WX_user + getApp().globalData.wx_url_7
+var ListUrl_8  = getApp().globalData.WX_user + getApp().globalData.wx_url_8
+var ListUrl_9  = getApp().globalData.WX_user + getApp().globalData.wx_url_9
+var ListUrl_10 = getApp().globalData.WX_user + getApp().globalData.wx_url_10
+var ListUrl_11 = getApp().globalData.WX_user + getApp().globalData.wx_url_11
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    index: 0,
-    videoState: '',
-    mac: 0,
-    macMa: '躺着挣钱 的看看小店赚了￥886.00',
-    indexList: [
-      '躺着挣钱 的看看小店赚了￥886.001',
-      '躺着挣钱 的看看小店赚了￥886.002',
-      '躺着挣钱 的看看小店赚了￥886.003',
-      '躺着挣钱 的看看小店赚了￥886.004',
-    ],
+    // 初始化视频列表
+    movieList: [],
+    // 推荐人ID
     userInfo: [],
     // 用户广告消息是否显示
     userAdvNews: false,
@@ -30,84 +25,139 @@ Page({
     shopCart: false,
     //购物车数据
     shopCartDataList: [{
-      movieName: '喜剧之王',
-      moviePrice: '3.99',
-      movieNum: '1',
+      movieName: '占位',
       movieStatus: false,
-      movieId: 65737,
-      salesCount: ''
     }, ],
     // 购物车是否有商品
     shopStatus: true,
     //购物车弹窗是否显示
     shopPopup: false,
+    // 购物车商品总数
     shopCartIndexI: '',
+    // 购物车商品总价钱
     shopCartIndexMoney: '',
+    // banner处显示的视频地址
     videoState: "http://61.133.53.18/data/cdn_transfer/99/91/9996ec06155550c94e7b02214b4c1cbefa330a91.mp4",
+    // 购物车是否为空 空则显示灰色，否则显示具体内容
     shopNuStatus: true,
+    // 初始化推荐人头像
     HeheadPicUrl: '../../images/head_url.png',
+    // 根据滑动距离决定“我也要开店的位置”-已废弃
     dp: false,
-    HeMoney: '**.00'
+    // 初始化小店累计收入
+    HeMoney: '**.00',
+    // 我的推广和未推广的切换状态
+    title_set: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-
-    // 获取推荐人id
-    var that = this;
+    //首先保留this的指向问题
+    var _this = this;
+    // 授权之后获取用户信息
     wx.getStorage({
-      key: "refId",
+      key: 'userInfo',
       success: function(res) {
-        that.setData({
-          userId_id: res.data || ''
+        _this.setData({
+          userInfo: res.data
         })
-      }
+        // 如果是从授权页面进入则直接调用支付
+        if (options.Lo == 'login') {
+          // 获取获取内的订单信息存在data
+          wx.getStorage({
+            key: 'PsyShopCartDataList',
+            success: function(res) {
+              _this.setData({
+                shopCartDataList: res.data
+              })
+              // 执行ZX 支付函数执行
+              _this.PayWec()
+            },
+          })
+        }
+      },
     })
-    // 执行ZX 求购物车商品条数
+    // 把从APP带来的user_id存入本地缓存
+    wx.setStorage({
+      key: "refId",
+      data: options.user_id || '1'
+    })
+    // 把从APP带来的user_id存入本地data
+    _this.setData({
+      RefUserId: options.user_id || '1'
+    })
+    // 执行ZX 求购物车当前的
     this.ShopCartIndexI()
     // 执行ZX 执行请求视频列表
-    this.GetUserInfo(this.GetUserInfoCallback)
+    this.GetUserInfoHttpCallback()
     //判断购物车是否有商品
     this.ShopNull()
   },
-  
-  // 弹窗
-  showDialogBtn: function() {
-    this.setData({
-      showModal: true
+  // 定义DY查看他以购买的视频
+  ToTitleMy: function() {
+    // 为回调保留this
+    let _this = this
+    // 请求已购买的接口
+    wx.request({
+      url: ListUrl_10,
+      data: {
+        limit: 10,
+        offset: 0,
+        total: '',
+        userId: _this.data.RefUserId
+      },
+      header: {
+        'content-type': 'application/json', // 默认值
+      },
+      success: res => {
+        let movieList = res.data.data;
+        _this.setData({
+          movieList: movieList
+        })
+      }
+    })
+    // 把选中状态保存到data
+    _this.setData({
+      title_set: true
     })
   },
-
-  // 弹出框蒙层截断touchmove事件
-  preventTouchMove: function() {},
-  
-  //  隐藏模态对话框
-  hideModal: function() {
+  // 定义DY 查看他未购买的视频
+  ToTitleHe: function() {
+    // 为回调保留this
+    let _this = this
+    // 请求未购买的接口
+    wx.request({
+      url: ListUrl_11,
+      data: {
+        limit: 10,
+        offset: 0,
+        total: '',
+        userId: _this.data.RefUserId
+      },
+      header: {
+        'content-type': 'application/json', // 默认值
+      },
+      success: res => {
+        let movieList = res.data.data;
+        _this.setData({
+          movieList: movieList
+        })
+      }
+    })
+    // 把选中状态存入data
     this.setData({
-      showModal: false
-    });
-  },
-  hideModalshopPopup: function() {
-    this.setData({
-      shopPopup: false
+      title_set: false
     })
   },
-  // 对话框取消按钮点击事件
-  onCancel: function() {
-    this.hideModal();
-  },
-
-  // 对话框确认按钮点击事件
-  onConfirm: function() {
-    this.hideModal();
-  },
-
-  //定义DY 求购物车商品条数和总价
+  // 定义DY 求购物车商品条数和总价
   ShopCartIndexI: function() {
+    // 获取data里定义的购物车集合
     let cartList = this.data.shopCartDataList
+    // 初始化总数量数组
     var shopNum = [0]
+    // 初始化总价钱数组
     var shopMoney = [0]
     // 循环购物车商品
     for (let i in cartList) {
@@ -126,19 +176,23 @@ Page({
     }
     // 数组求和 购买总数
     const numSum = shopNum.reduce((a = 0, i) => a + Number(i))
-    // 数组求和 总价
+    // 数组求和 购买总价
     const MoneySum = (shopMoney.reduce((a = 0, i) => a + Number(i))).toFixed(2)
+    // 把总价钱和总数量存进data数据
     this.setData({
       shopCartIndexI: numSum,
       shopCartIndexMoney: MoneySum
     })
   },
-  //定义DY 购物车全部清空
+  // 定义DY 购物车全部清空
   emptyFn: function() {
+    // 声明购物车数据
     let cartList = this.data.shopCartDataList;
+    // 遍历当前购物车中数据全变赋值为关闭状态
     for (let i in cartList) {
       cartList[i].movieStatus = false
     }
+    // 得到的结果替换data中购物车数据
     this.setData({
       shopCartDataList: this.data.shopCartDataList
     })
@@ -149,19 +203,26 @@ Page({
     // 判断购物车中是否有商品
     this.shopTandF()
   },
-  // 判断购物车中是否有商品
+  // 定义DY 判断购物车中是否有商品
   shopTandF: function() {
-    console.log(this.data.shopCartDataList)
+    // 声明购物车中数据
     let shopList = this.data.shopCartDataList
+    // 遍历购物车中数据
     for (let i in shopList) {
+      // 判断购物车中数据是否为关闭状态
       if (shopList[i].movieStatus == false) {
+      // 遍历视频列表中数据
         for (let j in this.data.movieList) {
+          // 视频列表中数量变为0
           this.data.movieList[j].movieNum = 0;
+          // 视频列表中减号状态变为隐藏
           this.data.movieList[j].movieStatus = false;
+          // 购物车中商品状态变为0，隐藏
           this.data.shopCartDataList[i].movieNum = 0
         }
-
+        // 把数据设置到data中
         this.setData({
+          // 把视频列表数据设置到data中
           movieList: this.data.movieList,
           // 购物车是否有商品
           shopStatus: false,
@@ -170,6 +231,7 @@ Page({
 
         })
       } else {
+        // 如果购物车中有大于等一1件商品，则购物车状态为开启状态
         this.setData({
           // 购物车是否有商品
           shopStatus: true,
@@ -179,127 +241,48 @@ Page({
       }
     }
   },
-  // 定义DY 消息列表动画函数定义
-  PushMessage: function() {
-    // 重定向this值
-    var _this = this;
-    // 初始化声明一个i
-    var i = 0
-    // 初始化滑出页面
-    var animationCloudData = wx.createAnimation({
-      duration: 1000,
-      timingFunction: 'ease-in-out',
-      //transformOrigin: '4px 91px'
-    });
-
-    //动画的脚本定义必须每次都重新生成，不能放在循环外
-    animationCloudData.translateX(200).step({
-      duration: 2500
-    }).opacity(0).step({
-      duration: 1000
-    });
-
-    // 定义data数据。更新数据
-    _this.setData({
-      // 导出动画示例
-      animationCloudData: animationCloudData.export(),
-    })
-    // 循环执行定时器-闪烁效果
-    setInterval(function() {
-      // i+1
-      ++i;
-      // 每次显示第几条
-      var disInfo = Math.floor(i / 2);
-      // data中总条目数目
-      var disLen = (_this.data.indexList.length) - 1
-      // 如果当前显示的条数大于等于总条目数
-      if (disInfo >= disLen) {
-        i = 0
-      }
-      //动画的脚本定义必须每次都重新生成，不能放在循环外
-      animationCloudData.translateX(200).step({
-        duration: 2500
-      }).opacity(0).step({
-        duration: 2500
-      });
-      //动画的脚本定义必须每次都重新生成，不能放在循环外
-      animationCloudData.translateX(200).step({
-        duration: 2500
-      }).opacity(1).step({
-        duration: 2500
-      });
-      // 更新数据
-      _this.setData({
-        // 导出动画示例
-        animationCloudData: animationCloudData.export(),
-        macMa: _this.data.indexList[disInfo]
-      })
-    }.bind(_this), 2500); //3000这里的设置如果小于动画step的持续时间的话会导致执行一半后出错
-
-  },
-  // 定义DY 获取本地缓存 userInfo后执行设置数据到data的函数（请求视频列表）
-  GetUserInfo: function(callback) {
-    var that = this;
-    wx.getStorage({
-      key: "userInfo",
-      success: function(res) {
-        callback(res)
-      }
-    })
-  },
-  // 定义DY 获取缓存数据GetUserInfo的函数执行后设置数据到data的回调函数
-  GetUserInfoCallback: function(res) {
-    this.setData({
-      userInfo: res.data
-    })
-    //执行ZX 初始化遍历事件函数（在此处执行的意义是保证或获取到缓存数据）
-    this.GetUserInfoHttpCallback()
-  },
-  // 定义DY 获取缓存数据GetUserInfo的函数执行后设置数据到data回调函数之后请求视频列表函数
+  // 定义DY 获取视频列表的数据
   GetUserInfoHttpCallback: function() {
-    console.log(this.data)
+    // 保留this的指向
     var _this = this
-    if (_this.data.userId_id == 1){
+    // 如果推荐人的ID为1则显示官方的小店 请求的接口为getOfficialRecommendation
+    if (_this.data.RefUserId == 1) {
       wx.request({
         url: ListUrl_9,
         data: {
-          limit: 10,
+          limit: 0,
           offset: 0,
           total: '',
         },
-        // dataType: JSON,
         header: {
           'content-type': 'application/json', // 默认值
-          'userid': _this.data.userInfo.userId,
-          'terminal': 'MINIPRO',
-          'ticket': _this.data.userInfo.ticket,
         },
         success: res => {
-          console.log(res.data.data)
           let movieList = res.data.data;
           _this.setData({
             movieList: movieList
           })
         }
       })
-    }else{
+    }
+    // 如果推荐人ID不为1则显示为推荐人的小店 请求的接口为getMySpreadListByUserId
+    else {
       wx.request({
         url: ListUrl,
         data: {
           limit: 10,
           offset: 0,
           total: '',
-          userId: _this.data.userId_id
+          userId: _this.data.RefUserId
         },
         // dataType: JSON,
         header: {
           'content-type': 'application/json', // 默认值
-          'userid': _this.data.userInfo.userId,
-          'terminal': 'MINIPRO',
-          'ticket': _this.data.userInfo.ticket,
+          // 'userid': _this.data.userInfo.userId,
+          // 'terminal': 'MINIPRO',
+          // 'ticket': _this.data.userInfo.ticket,
         },
         success: res => {
-          console.log(res.data.data)
           let movieList = res.data.data;
           _this.setData({
             movieList: movieList
@@ -329,6 +312,8 @@ Page({
     this.ShopCartIndexI()
     // 执行ZX 计算每天商品的条数视频列表
     this.NumberCalculation()
+    // 执行ZX 把购物车数据存到本地缓存
+    this.storageCache(this.data.shopCartDataList)
     // 如果购物车数组中movieStatus全部为false则更改状态
     for (let i in this.data.shopCartDataList) {
       if (shopCartDataList[i].movieStatus == false) {
@@ -359,7 +344,6 @@ Page({
     let shopCartDataList = this.data.shopCartDataList
     // 全部视频列表数据
     let movieList = this.data.movieList
-    console.log(movieList)
     for (let i in movieList) {
       if (shopCartDataList[index].movieId == movieList[i].movieId) {
         this.data.movieList[i].movieNum++
@@ -374,23 +358,31 @@ Page({
     })
     // 执行ZX 求购物车商品条数
     this.ShopCartIndexI()
+    // 执行ZX 把购物车数据存到本地缓存
+    this.storageCache(this.data.shopCartDataList)
   },
-  //定义DY 点击出现购物车弹窗
+  // 定义DY 点击出现购物车弹窗
   BindToPopup: function() {
-
+    // 切换购物车弹窗的显示和隐藏
     if (this.data.shopPopup == true) {
       this.setData({
         shopPopup: false,
-
       })
     } else {
       this.setData({
         shopPopup: true,
-
       })
     }
   },
-  //定义DY 点击视频列表中的减号
+  // 定义DY 把购物车实时数据缓存到本地缓存
+  storageCache: function(e) {
+    wx.removeStorageSync('shopCartDataList')
+    wx.setStorage({
+      key: "shopCartDataList",
+      data: e
+    })
+  },
+  // 定义DY 点击视频列表中的减号
   BindToAddCart: function(e) {
     // 购物车数据列表
     let shopCart = this.data.shopCartDataList
@@ -410,13 +402,14 @@ Page({
         })
       }
     }
+    // 执行ZX 把购物车数据存到本地缓存
+    this.storageCache(this.data.shopCartDataList)
     // 执行ZX 求购物车商品条数
     this.ShopCartIndexI()
     // 执行ZX 计算每天商品的条数视频列表
     this.NumberCalculation()
     // 如果购物车数组中movieStatus全部为false则更改状态
     for (let i in this.data.shopCartDataList) {
-      console.log(this.data.shopCartDataList[i])
       if (this.data.shopCartDataList[i].movieStatus == false) {
         this.setData({
           // 购物车是否有商品
@@ -435,7 +428,6 @@ Page({
     }
     // 执行ZX 判断购物车是否为空
     this.ShopNull()
-
   },
   // 定义DY 点击视频列表中的加号
   BindToSubCart: function(e) {
@@ -461,12 +453,15 @@ Page({
         this.setData({
           shopCartDataList: this.data.shopCartDataList,
         })
+
         // 执行ZX 计算每天商品的条数视频列表
         this.NumberCalculation()
         // 执行ZX 求购物车商品条数
         this.ShopCartIndexI()
         //执行ZX 判断购物车是否为空
         this.ShopNull()
+        // 执行ZX 把购物车数据存到本地缓存
+        this.storageCache(this.data.shopCartDataList)
         return
       }
     }
@@ -484,7 +479,6 @@ Page({
           productId: movieList[index].productId
         }
         shopCart.push(temp)
-        console.log(shopCart)
         this.setData({
           shopCartDataList: shopCart
         })
@@ -495,15 +489,15 @@ Page({
       this.NumberCalculation()
       //执行ZX 判断购物车是否为空
       this.ShopNull()
+      // 执行ZX 把购物车数据存到本地缓存
+      this.storageCache(this.data.shopCartDataList)
       return
     }
 
 
   },
-  //定义DY 计算每天商品的条数视频列表*******
+  // 定义DY 计算每天商品的条数视频列表*******
   NumberCalculation: function() {
-    console.log(this.data.shopCartDataList)
-    console.log(this.data.movieList)
     // 视频列表
     for (let i in this.data.movieList) {
       // 购物车列表
@@ -517,14 +511,41 @@ Page({
     this.setData({
       movieList: this.data.movieList
     })
-    console.log(this.data.movieList)
   },
   // 定义DY 点击购买函数 点击之后执行
   BindToBuy: function(e) {
-    console.log(this.data.shopCartDataList)
+    // 保留this指向
+    let _this = this
+    wx.getSetting({
+      success: function(res) {
+        let grant = res.authSetting['scope.userInfo']
+        // 如果已经授权则直接购买
+        if (grant) {
+          _this.PayWec()
+        }
+        // 如果未授权则跳转授权页面，同时缓存收据
+        else {
+          wx.setStorage({
+            key: "PsyShopCartDataList",
+            data: _this.data.shopCartDataList
+          })
+          wx.reLaunch({
+            url: '/pages/login/login',
+          });
+        }
+      }
+    })
+
+  },
+  // 定义DY 支付函数定义
+  PayWec: function() {
+    // 保留this指向
     let _this = this;
+    // 获得购物车数据
     let shopCartDataList = this.data.shopCartDataList;
+    // 初始化提交数组
     let Tobuy = [];
+    // 循环购物车中数量不为零的数据
     for (let i in shopCartDataList) {
       if (shopCartDataList[i].movieStatus == true) {
         let temp = {
@@ -533,15 +554,13 @@ Page({
         }
         Tobuy.push(temp)
       }
-
     }
     let newP = {
       "payMethod": "W1",
       "products": Tobuy,
-      "sellUserId": _this.data.userId_id,
+      "sellUserId": _this.data.RefUserId,
       "userId": _this.data.userInfo.userId
     }
-    console.log(newP)
     let uov = {
       uov: JSON.stringify(newP)
     }
@@ -557,7 +576,6 @@ Page({
         'ticket': _this.data.userInfo.ticket,
       },
       success: res => {
-        console.log(JSON.parse(res.data).data.wxReturn)
         var pay = JSON.parse(res.data).data.wxReturn
         var payOrderNo = JSON.parse(res.data).data.order
         let orderList = {
@@ -581,7 +599,6 @@ Page({
           'signType': signType_pay,
           'paySign': paySign_pay,
           'success': function(res) {
-            console.log(res.errMsg == 'requestPayment:ok')
             if (res.errMsg == 'requestPayment:ok') {
               wx: wx.navigateTo({
                 url: '/pages/endOrder/endOrder',
@@ -600,17 +617,16 @@ Page({
       url: ListUrl_5,
       method: "GET",
       data: {
-        userId: _this.data.userId_id,
+        userId: _this.data.RefUserId,
       },
       dataType: JSON,
       header: {
         'content-type': 'application/json', // 默认值
-        'userid': _this.data.userInfo.userId,
-        'terminal': 'MINIPRO',
-        'ticket': _this.data.userInfo.ticket,
+        // 'userid': _this.data.userInfo.userId,
+        // 'terminal': 'MINIPRO',
+        // 'ticket': _this.data.userInfo.ticket,
       },
       success: res => {
-
         _this.setData({
           HeNickname: JSON.parse(res.data).data.nickname,
           HeId: JSON.parse(res.data).data.id,
@@ -620,21 +636,21 @@ Page({
       }
     })
   },
-  //定义DY 获取小店累计收入函数----
+  // 定义DY 获取小店累计收入函数----
   ShopProfit: function() {
     let _this = this
     wx.request({
       url: ListUrl_6,
       method: "GET",
       data: {
-        userId: _this.data.userId_id,
+        userId: _this.data.RefUserId,
       },
       dataType: JSON,
       header: {
         'content-type': 'application/json', // 默认值
-        'userid': _this.data.userInfo.userId,
-        'terminal': 'MINIPRO',
-        'ticket': _this.data.userInfo.ticket,
+        // 'userid': _this.data.userInfo.userId,
+        // 'terminal': 'MINIPRO',
+        // 'ticket': _this.data.userInfo.ticket,
       },
       success: res => {
         _this.setData({
@@ -647,7 +663,6 @@ Page({
   ShopNull: function() {
     let _this = this;
     let shopNu = _this.data.shopCartDataList
-    console.log(shopNu)
     for (let i in shopNu) {
       if (shopNu[i].movieStatus == true) {
         _this.setData({
@@ -660,10 +675,9 @@ Page({
         })
       }
     }
-    console.log(this.shopNuStatus)
   },
   // 定义DY 分享接口
-  shareMiniPro:function(){
+  shareMiniPro: function() {
     let _this = this
     wx.request({
       url: ListUrl_8,
@@ -671,9 +685,9 @@ Page({
       dataType: JSON,
       header: {
         'content-type': 'application/json', // 默认值
-        'userid': _this.data.userInfo.userId,
-        'terminal': 'MINIPRO',
-        'ticket': _this.data.userInfo.ticket,
+        // 'userid': _this.data.userInfo.userId,
+        // 'terminal': 'MINIPRO',
+        // 'ticket': _this.data.userInfo.ticket,
       },
       success: res => {
         _this.setData({
@@ -682,7 +696,53 @@ Page({
       }
     })
   },
-
+  // 定义DY 点击开店按钮 -已废弃
+  onPageScroll: function (e) {
+    // 当距离头部高度大于等于300则为dp
+    if (e >= 300) {
+      this.setData({
+        dp: false
+      })
+    } else {
+      this.setData({
+        dp: true
+      })
+    }
+  },
+  // 定义DY 弹窗显示
+  showDialogBtn: function () {
+    this.setData({
+      showModal: true
+    })
+  },
+  // 定义DY 弹出框蒙层截断touchmove事件 禁止滑动
+  preventTouchMove: function () { },
+  // 定义DY 隐藏模态对话框
+  hideModal: function () {
+    this.setData({
+      showModal: false
+    });
+  },
+  // 定义DY 弹窗蒙层
+  hideModalshopPopup: function () {
+    this.setData({
+      shopPopup: false
+    })
+  },
+  // 定义DY 对话框取消按钮点击事件
+  onCancel: function () {
+    this.hideModal();
+  },
+  // 定义DY 对话框确认按钮点击事件
+  onConfirm: function () {
+    this.hideModal();
+  },
+  // 定义DY 点击视频=>跳转详情
+  // ToDet: function() {
+  //   wx.navigateTo({
+  //     url: '/pages/movieDet/movieDet',
+  //   })
+  // },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -706,16 +766,6 @@ Page({
   onShow: function() {
     //判断购物车是否有商品
     this.ShopNull()
-    //执行ZX 消息列表动画函数执行
-    // this.PushMessage()
-    //执行ZX 获取用户信息函数
-    this.ObtainUserInfo()
-    //执行ZX 获取小店累计收入函数
-    this.ShopProfit()
-    //判断购物车是否有商品
-    this.ShopNull()
-    //执行ZX 小程序分享
-    this.shareMiniPro()
   },
 
   /**
@@ -724,21 +774,7 @@ Page({
   onHide: function() {
 
   },
-  // 开店
-  onPageScroll: function(e) {
-    console.log(e); //{scrollTop:99}
-    if (e >= 300) {
-      this.setData({
-        dp: false
-      })
-      console.log(1)
-    } else {
-      this.setData({
-        dp: true
-      })
-      console.log(2)
-    }
-  },
+
   /**
    * 生命周期函数--监听页面卸载
    */
@@ -773,6 +809,65 @@ Page({
       imageUrl: imageUrl,
       path: path
     }
-  }
+  },
+ 
+  // 定义DY 消息列表动画函数定义
+  // PushMessage: function () {
+  //   // 重定向this值
+  //   var _this = this;
+  //   // 初始化声明一个i
+  //   var i = 0
+  //   // 初始化滑出页面
+  //   var animationCloudData = wx.createAnimation({
+  //     duration: 1000,
+  //     timingFunction: 'ease-in-out',
+  //     //transformOrigin: '4px 91px'
+  //   });
+
+  //   //动画的脚本定义必须每次都重新生成，不能放在循环外
+  //   animationCloudData.translateX(200).step({
+  //     duration: 2500
+  //   }).opacity(0).step({
+  //     duration: 1000
+  //   });
+
+  //   // 定义data数据。更新数据
+  //   _this.setData({
+  //     // 导出动画示例
+  //     animationCloudData: animationCloudData.export(),
+  //   })
+  //   // 循环执行定时器-闪烁效果
+  //   setInterval(function () {
+  //     // i+1
+  //     ++i;
+  //     // 每次显示第几条
+  //     var disInfo = Math.floor(i / 2);
+  //     // data中总条目数目
+  //     var disLen = (_this.data.indexList.length) - 1
+  //     // 如果当前显示的条数大于等于总条目数
+  //     if (disInfo >= disLen) {
+  //       i = 0
+  //     }
+  //     //动画的脚本定义必须每次都重新生成，不能放在循环外
+  //     animationCloudData.translateX(200).step({
+  //       duration: 2500
+  //     }).opacity(0).step({
+  //       duration: 2500
+  //     });
+  //     //动画的脚本定义必须每次都重新生成，不能放在循环外
+  //     animationCloudData.translateX(200).step({
+  //       duration: 2500
+  //     }).opacity(1).step({
+  //       duration: 2500
+  //     });
+  //     // 更新数据
+  //     _this.setData({
+  //       // 导出动画示例
+  //       animationCloudData: animationCloudData.export(),
+  //       macMa: _this.data.indexList[disInfo]
+  //     })
+  //   }.bind(_this), 2500); //3000这里的设置如果小于动画step的持续时间的话会导致执行一半后出错
+
+  // },
 
 })
