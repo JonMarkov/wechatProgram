@@ -7,7 +7,9 @@ App({
   globalData: {
     openid: 0,
     // 公共前缀
-    WX_user:'https://plus-api.kankan.com',
+    // WX_user:'https://plus-api.kankan.com',
+    WX_user: 'https://plus-api.kkstudy.cn',
+    Wx_rebate:'https://rebate-api.kkstudy.cn',
     // 登陆授权接口
     wx_url_1: '/user/login/miniProEncrypt',
     // 电影列表接口
@@ -29,6 +31,6 @@ App({
     // 获取指定人的推广
     wx_url_10:'/user/shop/getMySpreadListByUserId',
     // 获取指定人的待推广
-    wx_url_11:'/user/shop/getMySpreadList'
+    wx_url_11:'/user/shop/getMyNoSpreadListNoLogin'
   }
 })

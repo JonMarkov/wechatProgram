@@ -3,7 +3,7 @@
 var ListUrl    = getApp().globalData.WX_user + getApp().globalData.wx_url_2
 var ListUrl_3  = getApp().globalData.WX_user + getApp().globalData.wx_url_3
 var ListUrl_5  = getApp().globalData.WX_user + getApp().globalData.wx_url_5
-var ListUrl_6  = getApp().globalData.WX_user + getApp().globalData.wx_url_6
+var ListUrl_6  =  getApp().globalData.Wx_rebate + getApp().globalData.wx_url_6
 var ListUrl_7  = getApp().globalData.WX_user + getApp().globalData.wx_url_7
 var ListUrl_8  = getApp().globalData.WX_user + getApp().globalData.wx_url_8
 var ListUrl_9  = getApp().globalData.WX_user + getApp().globalData.wx_url_9
@@ -94,6 +94,8 @@ Page({
     this.GetUserInfoHttpCallback()
     //判断购物车是否有商品
     this.ShopNull()
+    //执行ZX 小程序分享
+    this.shareMiniPro()
   },
   // 定义DY查看他以购买的视频
   ToTitleMy: function() {
@@ -648,9 +650,9 @@ Page({
       dataType: JSON,
       header: {
         'content-type': 'application/json', // 默认值
-        // 'userid': _this.data.userInfo.userId,
-        // 'terminal': 'MINIPRO',
-        // 'ticket': _this.data.userInfo.ticket,
+        'userid': _this.data.userInfo.userId,
+        'terminal': 'MINIPRO',
+        'ticket': _this.data.userInfo.ticket,
       },
       success: res => {
         _this.setData({
@@ -676,16 +678,19 @@ Page({
       }
     }
   },
-  // 定义DY 分享接口
+  // 定义DY 分享接口 zhelixuyaoxiugai
   shareMiniPro: function() {
     let _this = this
     wx.request({
       url: ListUrl_8,
       method: "GET",
       dataType: JSON,
+      data: {
+        userId: _this.data.RefUserId,
+      },
       header: {
         'content-type': 'application/json', // 默认值
-        // 'userid': _this.data.userInfo.userId,
+        // 'userid': userIDHE,
         // 'terminal': 'MINIPRO',
         // 'ticket': _this.data.userInfo.ticket,
       },
@@ -753,7 +758,9 @@ Page({
     //执行ZX 获取用户信息函数
     this.ObtainUserInfo()
     //执行ZX 获取小店累计收入函数
-    this.ShopProfit()
+    if(this.data.RefUserId!=1){
+      this.ShopProfit()
+    }
     //判断购物车是否有商品
     this.ShopNull()
     //执行ZX 小程序分享

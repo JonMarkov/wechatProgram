@@ -21,7 +21,7 @@
     </view>
   </view>
   <!-- 右侧 -->
-  <view class='info_right' bindtap='macong' wx:if="{{userId_id !=1}}">
+  <view class='info_right' bindtap='macong' wx:if="{{RefUserId !=1}}">
     <view class='info_title'>小店累计收入</view>
     <view class='info_money'>￥{{HeMoney}}</view>
   </view>
