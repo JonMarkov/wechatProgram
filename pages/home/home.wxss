@@ -655,7 +655,7 @@ page {
   /* position: fixed; */
   /* top:126rpx; */
   right: 10rpx;
-  width: 80px;
+  width: 58px;
   height: 10px;
   float: right;
   /* margin-bottom: -35px; */
@@ -663,6 +663,26 @@ page {
   /* margin-left: 550rpx; */
   font-size: 28rpx;
   background: red;
+  padding: 20rpx 30rpx;
+  border-radius: 40rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+.dianpuZQ{
+ margin-right: 40rpx;
+  margin-bottom: -72rpx;
+  /* position: fixed; */
+  /* top:126rpx; */
+  right: 10rpx;
+  width: 72px;
+  height: 26px;
+  float: right;
+  /* margin-bottom: -35px; */
+  z-index: 999;
+  /* margin-left: 550rpx; */
+  font-size: 28rpx;
+  background: rgba(197,162,97,1);
   padding: 20rpx 30rpx;
   border-radius: 40rpx;
   color: #fff;
@@ -788,4 +808,7 @@ top: 0rpx
 }
 .dp2{
 top: 126rpx
+}
+.dp3{
+  top:26rpx
 }

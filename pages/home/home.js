@@ -1,12 +1,12 @@
 // pages/home/home.js
 // 声明SM 调用接口声明
-var ListUrl    = getApp().globalData.WX_user + getApp().globalData.wx_url_2
-var ListUrl_3  = getApp().globalData.WX_user + getApp().globalData.wx_url_3
-var ListUrl_5  = getApp().globalData.WX_user + getApp().globalData.wx_url_5
-var ListUrl_6  =  getApp().globalData.Wx_rebate + getApp().globalData.wx_url_6
-var ListUrl_7  = getApp().globalData.WX_user + getApp().globalData.wx_url_7
-var ListUrl_8  = getApp().globalData.WX_user + getApp().globalData.wx_url_8
-var ListUrl_9  = getApp().globalData.WX_user + getApp().globalData.wx_url_9
+var ListUrl = getApp().globalData.WX_user + getApp().globalData.wx_url_2
+var ListUrl_3 = getApp().globalData.WX_user + getApp().globalData.wx_url_3
+var ListUrl_5 = getApp().globalData.WX_user + getApp().globalData.wx_url_5
+var ListUrl_6 = getApp().globalData.Wx_rebate + getApp().globalData.wx_url_6
+var ListUrl_7 = getApp().globalData.WX_user + getApp().globalData.wx_url_7
+var ListUrl_8 = getApp().globalData.WX_user + getApp().globalData.wx_url_8
+var ListUrl_9 = getApp().globalData.WX_user + getApp().globalData.wx_url_9
 var ListUrl_10 = getApp().globalData.WX_user + getApp().globalData.wx_url_10
 var ListUrl_11 = getApp().globalData.WX_user + getApp().globalData.wx_url_11
 Page({
@@ -47,7 +47,9 @@ Page({
     // 初始化小店累计收入
     HeMoney: '**.00',
     // 我的推广和未推广的切换状态
-    title_set: false
+    title_set: '',
+    // 我要开店和去赚钱状态
+    shopState: true
   },
 
   /**
@@ -79,6 +81,47 @@ Page({
         }
       },
     })
+
+    wx.getStorage({
+      key: 'shopDian',
+      success: function(res) {
+        wx.getStorage({
+          key: 'level',
+          success: function(res_level) {
+            if (res_level.data != 0) {
+              if (res.data) {
+                // 把从APP带来的user_id存入本地缓存
+                wx.setStorage({
+                  key: "refId",
+                  data: _this.data.userInfo.userId
+                })
+                // 把从APP带来的user_id存入本地data
+                _this.setData({
+                  RefUserId: _this.data.userInfo.userId,
+                  shopState: false
+                })
+              }
+              // 执行ZX 求购物车当前的
+              this.ShopCartIndexI()
+              // 执行ZX 执行请求视频列表
+              this.GetUserInfoHttpCallback()
+              //判断购物车是否有商品
+              this.ShopNull()
+              //执行ZX 小程序分享
+              this.shareMiniPro()
+
+              return
+            }
+            else {
+              _this.setData({
+                showModal: true
+              })
+            }
+          },
+        })
+
+      },
+    })
     // 把从APP带来的user_id存入本地缓存
     wx.setStorage({
       key: "refId",
@@ -86,7 +129,8 @@ Page({
     })
     // 把从APP带来的user_id存入本地data
     _this.setData({
-      RefUserId: options.user_id || '1'
+      RefUserId: options.user_id || '1',
+      shopState: true
     })
     // 执行ZX 求购物车当前的
     this.ShopCartIndexI()
@@ -166,7 +210,7 @@ Page({
       if (cartList[i].movieStatus == true) {
         // 单个商品数量
         let cartDNmu = cartList[i].movieNum
-        // 单个商品价钱
+        // 单个商品价钱s
         let cartMoney = cartList[i].moviePrice
         // 单个商品价钱乘以数量 
         let TotalMoney = cartDNmu * cartMoney
@@ -213,7 +257,7 @@ Page({
     for (let i in shopList) {
       // 判断购物车中数据是否为关闭状态
       if (shopList[i].movieStatus == false) {
-      // 遍历视频列表中数据
+        // 遍历视频列表中数据
         for (let j in this.data.movieList) {
           // 视频列表中数量变为0
           this.data.movieList[j].movieNum = 0;
@@ -621,7 +665,7 @@ Page({
       data: {
         userId: _this.data.RefUserId,
       },
-      dataType: JSON,
+      // dataType: JSON,
       header: {
         'content-type': 'application/json', // 默认值
         // 'userid': _this.data.userInfo.userId,
@@ -629,11 +673,11 @@ Page({
         // 'ticket': _this.data.userInfo.ticket,
       },
       success: res => {
-        _this.setData({
-          HeNickname: JSON.parse(res.data).data.nickname,
-          HeId: JSON.parse(res.data).data.id,
-          HeheadPicUrl: JSON.parse(res.data).data.localHeadPic,
-          HehedLevel: JSON.parse(res.data).data.level,
+        this.setData({
+          Nickname: res.data.data.nickname,
+          HeId: res.data.data.id,
+          HeheadPicUrl: res.data.data.localHeadPic,
+          HehedLevel: res.data.data.level,
         })
       }
     })
@@ -702,7 +746,7 @@ Page({
     })
   },
   // 定义DY 点击开店按钮 -已废弃
-  onPageScroll: function (e) {
+  onPageScroll: function(e) {
     // 当距离头部高度大于等于300则为dp
     if (e >= 300) {
       this.setData({
@@ -715,31 +759,84 @@ Page({
     }
   },
   // 定义DY 弹窗显示
-  showDialogBtn: function () {
-    this.setData({
-      showModal: true
-    })
+  showDialogBtn: function() {
+    let _this = this
+    if (this.data.HehedLevel > 0) {
+      wx.getSetting({
+        success: function(res) {
+          // 当前时间戳
+          let timestamp = Date.parse(new Date()) / 1000;
+          // 查看是否授权过
+          let grant = res.authSetting['scope.userInfo']
+          if (grant) {
+            wx.getStorage({
+              key: 'level',
+              success: function(res) {
+                if (res.data != 0) {
+                  // 把从APP带来的user_id存入本地缓存
+                  wx.setStorage({
+                    key: "refId",
+                    data: _this.data.userInfo.userId
+                  })
+                  // 把从APP带来的user_id存入本地data
+                  _this.setData({
+                    RefUserId: _this.data.userInfo.userId,
+                    shopState: false
+                  })
+                  // 执行ZX 求购物车当前的
+                  _this.ShopCartIndexI()
+                  // 执行ZX 执行请求视频列表
+                  _this.ToTitleHe()
+                  //判断购物车是否有商品
+                  _this.ShopNull()
+                  //执行ZX 小程序分享
+                  _this.shareMiniPro()
+                  //执行ZX 获取用户信息函数
+                  _this.ObtainUserInfo()
+                  return
+                } else {
+                  _this.setData({
+                    showModal: true
+                  })
+                }
+              },
+            })
+
+          } else {
+            let shopDian = '2'
+            wx.reLaunch({
+              url: '/pages/login/login?shopDian=' + shopDian,
+            });
+          }
+        }
+      })
+
+    } else {
+      this.setData({
+        showModal: true
+      })
+    }
   },
   // 定义DY 弹出框蒙层截断touchmove事件 禁止滑动
-  preventTouchMove: function () { },
+  preventTouchMove: function() {},
   // 定义DY 隐藏模态对话框
-  hideModal: function () {
+  hideModal: function() {
     this.setData({
       showModal: false
     });
   },
   // 定义DY 弹窗蒙层
-  hideModalshopPopup: function () {
+  hideModalshopPopup: function() {
     this.setData({
       shopPopup: false
     })
   },
   // 定义DY 对话框取消按钮点击事件
-  onCancel: function () {
+  onCancel: function() {
     this.hideModal();
   },
   // 定义DY 对话框确认按钮点击事件
-  onConfirm: function () {
+  onConfirm: function() {
     this.hideModal();
   },
   // 定义DY 点击视频=>跳转详情
@@ -758,7 +855,7 @@ Page({
     //执行ZX 获取用户信息函数
     this.ObtainUserInfo()
     //执行ZX 获取小店累计收入函数
-    if(this.data.RefUserId!=1){
+    if (this.data.RefUserId != 1) {
       this.ShopProfit()
     }
     //判断购物车是否有商品
@@ -802,7 +899,9 @@ Page({
   onReachBottom: function() {
 
   },
-
+  showDialogSh: function() {
+    this.onShareAppMessage
+  },
   /**
    * 用户点击右上角分享
    */
@@ -817,7 +916,7 @@ Page({
       path: path
     }
   },
- 
+
   // 定义DY 消息列表动画函数定义
   // PushMessage: function () {
   //   // 重定向this值

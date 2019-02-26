@@ -6,6 +6,11 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   onLoad: function(options) {
+    if (options.shopDian) {
+      this.setData({
+        shopDian: options.shopDian
+      })
+    }
     // 获取当前的时间戳
     var timestamp = Date.parse(new Date()) / 1000;
     // 从APP中带来的用户Id
@@ -56,7 +61,9 @@ Page({
       })
       // 开始授权
       wx.login({
+
         success: res => {
+          let _this = this
           // 获取到微信返回的code
           wx.getUserInfo({
             success: function(res1) {
@@ -92,8 +99,20 @@ Page({
                     key: "userInfo",
                     data: temp
                   })
+                  // 用户等级
+                  wx.setStorage({
+                    key: "level",
+                    data: res.data.data.level
+                  })
                   // 授权成功之后跳转
                   let Lo = 'login'
+                  if (_this.data.shopDian) {
+                    wx.setStorage({
+                      key: "shopDian",
+                      data: _this.data.shopDian
+                    })
+           
+                  }
                   wx.reLaunch({
                     url: '/pages/home/home?Lo=' + Lo,
                   });

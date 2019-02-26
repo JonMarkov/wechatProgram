@@ -8,6 +8,7 @@ App({
     openid: 0,
     // 公共前缀
     // WX_user:'https://plus-api.kankan.com',
+    // Wx_rebate:'https://rebate-api.kkstudy.cn',
     WX_user: 'https://plus-api.kkstudy.cn',
     Wx_rebate:'https://rebate-api.kkstudy.cn',
     // 登陆授权接口
@@ -26,7 +27,7 @@ App({
     wx_url_7: '/base/movie/getMovieTicketForMini',
     //小程序分享
     wx_url_8: '/weixin/share/miniPro',
-    //小程序分享
+    //请求推广
     wx_url_9: '/user/shop/getOfficialRecommendation',
     // 获取指定人的推广
     wx_url_10:'/user/shop/getMySpreadListByUserId',

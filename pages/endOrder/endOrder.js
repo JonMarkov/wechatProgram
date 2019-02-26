@@ -149,7 +149,7 @@ Page({
   SeeShop:function(){
     console.log(this.data)
       wx.navigateTo({
-        url: '/pages/login/login?user_id=' + this.data.userInfo.userId,
+        url: '/pages/home/home?user_id=' + this.data.userInfo.userId,
       })
   },
   /**
